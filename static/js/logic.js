@@ -4,11 +4,15 @@ function CreateMap(earthquakes) {
     let streetmap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
-  
+
+    let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+    });
   
     // Create a baseMaps object to hold the streetmap layer.
     let baseMaps = {
-      "Street Map": streetmap
+      "Street Map": streetmap,
+      "Topographic Map": topo
     };
   
     // Create an overlayMaps object to hold the earthquakes layer.
@@ -18,9 +22,9 @@ function CreateMap(earthquakes) {
   
     // Create the map object with options.
     let map = L.map("map", {
-      center: [40.73, -74.0059],
-      zoom: 12,
-      layers: [streetmap, earthquakes]
+      center: [37.65, -97.57],
+      zoom: 5,
+      layers: [streetmap, topo, earthquakes]
     });
   
     // Create a layer control, and pass it baseMaps and overlayMaps. Add the layer control to the map.
@@ -31,36 +35,57 @@ function CreateMap(earthquakes) {
   
 function CreateMarkers(data){
 
-    let datafeatures = data.features
-    let earthquakeMarkers = []
-    datafeatures.forEach(feature =>{
-        let coordinates = feature.geometry.coordinates
-        let earthquakeMarker = L.marker([coordinates[0],coordinates[1]])
-        .bindPopup("hoobastank")
-        earthquakeMarkers.push(earthquakeMarker)
-    })
+  // Get the features data
+  let datafeatures = data.features
 
-    CreateMap(L.layerGroup(earthquakeMarkers));
+  // Create an array to hold the markers
+  let earthquakeMarkers = []
+
+  // Loop through each fature to key feature details
+  datafeatures.forEach(feature =>{
+    let coordinates = feature.geometry.coordinates
+    let magnitude = feature.properties.mag
+    let depth = coordinates[2]
+    let radius = magnitude * 10000
+    let fillcolor = SelectedColor(depth)
+
+  // While still looping, create a circle marker for magnitude of the earthquake and bind a popup
+
+    let earthquakeMarker = L.circle([coordinates[1],coordinates[0]],
+      {radius:radius, color: fillcolor, opacity:1, fillOpacity:.8})
+    .bindPopup(`<h3>${feature.properties.place.toUpperCase()}</h3>
+      <hr><p>Time Occured: ${new Date(feature.properties.time)}</p>   
+      <p>Magnitude: ${magnitude}</p>
+      <p>Location: ${coordinates[1]}, ${coordinates[0]}</p>
+      <p>Depth: ${coordinates[2]}</p>`)
+
+  // While still looping, push the earthquake markers to the marker array   
+      earthquakeMarkers.push(earthquakeMarker)
+      
+  // Create a function for the fill color based on depth
+    function SelectedColor(depth){
+      if (depth > 20) {
+        return "black";
+      } else if (depth >=20) {
+        return "purple";
+      } else if (depth >=10) {
+        return "red";
+      } else if (depth >=5) {
+      return "orange";
+      } else {
+      return "yellow";
+      }
+    }
+        
+})
+    // https://stackoverflow.com/questions/6695600/convert-datetime-to-valid-javascript-date
+
+// Add marker layer to the map
+CreateMap(L.layerGroup(earthquakeMarkers))
+
 }
 
 // Perform an API call to the Earthquake API to get the earthquake information.
 const earthquakeApiUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 d3.json(earthquakeApiUrl).then(CreateMarkers)
-
-
-
-
-// Import and visualize the data by doing the following:
-
-// Using Leaflet, create a map that plots all the earthquakes from your dataset based on their longitude and latitude.
-
-// Your data markers should reflect the magnitude of the earthquake by their size and the depth of the earthquake by color. Earthquakes with higher magnitudes should appear larger, and earthquakes with greater depth should appear darker in color.
-
-// Hint: The depth of the earth can be found as the third coordinate for each earthquake.
-
-// Include popups that provide additional information about the earthquake when its associated marker is clicked.
-
-// Create a legend that will provide context for your map data.
-
-// Your visualization should look something like the preceding map.
