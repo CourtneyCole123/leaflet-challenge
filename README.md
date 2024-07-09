@@ -14,11 +14,10 @@
 
 - A legend showing the depth and their corresponding color
 
+- Data points scale with magnitude level
 
-Data points scale with magnitude level
+- Data points colors change with depth level
 
-Data points colors change with depth level
+- Each point has a tooltip with the Magnitude, the location and depth
 
-Each point has a tooltip with the Magnitude, the location and depth
-
-All data points load in the correct locations
+- All data points load in the correct locations
