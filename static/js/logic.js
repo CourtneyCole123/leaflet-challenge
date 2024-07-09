@@ -31,19 +31,7 @@ function CreateMap(earthquakes) {
     L.control.layers(baseMaps, overlayMaps, {
       collapsed: false
     }).addTo(map);
-  }
-
-// Create a legend to display information about our map.
-let legend = L.control({position:'bottomright'});
-
-// When the layer control is added, insert a div with the class of "legend".
-legend.onAdd = function() {
-  let div = L.DomUtil.create("div", "legend");
-  return div;
-};
-// Add the info legend to the map.
-legend.addTo(map);
-
+}
 
 function CreateMarkers(data){
 
@@ -65,7 +53,7 @@ function CreateMarkers(data){
 
     let earthquakeMarker = L.circle([coordinates[1],coordinates[0]],
       {radius:radius, color: fillcolor, opacity:1, fillOpacity:.8})
-    .bindPopup(`<h3>${feature.properties.place.toUpperCase()}</h3>
+    .bindPopup(`<h3>${feature.properties.place}</h3>
       <hr><p>Time Occured: ${new Date(feature.properties.time)}</p>   
       <p>Magnitude: ${magnitude}</p>
       <p>Location: ${coordinates[1]}, ${coordinates[0]}</p>
@@ -84,9 +72,7 @@ function CreateMarkers(data){
         return "red";
       } else if (depth >=5) {
       return "orange";
-      } else {
-      return "yellow";
-      }
+      } 
     }
         
 })
@@ -94,10 +80,10 @@ function CreateMarkers(data){
 
 // Add marker layer to the map
 CreateMap(L.layerGroup(earthquakeMarkers))
-
 }
 
 // Perform an API call to the Earthquake API to get the earthquake information.
 const earthquakeApiUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 d3.json(earthquakeApiUrl).then(CreateMarkers)
+d3.json(earthquakeApiUrl).then(CreateLegend)
