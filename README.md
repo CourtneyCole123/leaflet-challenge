@@ -1,7 +1,5 @@
 <h1>Leaflet Challenge</h1>
 
-<h3>Part I: Required</h3>
-
 - Image of Map:
 
   
