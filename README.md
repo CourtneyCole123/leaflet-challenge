@@ -1,6 +1,6 @@
-<h4>Leaflet Challenge</h4>
+<h1>Leaflet Challenge</h1>
 
-<h6>Part I: Required</h6>
+<h3>Part I: Required</h3>
 
 - Image of Map:
 
