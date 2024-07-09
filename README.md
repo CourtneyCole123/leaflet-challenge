@@ -6,7 +6,7 @@
 
 <p>The USGS is interested in building a new set of tools that will allow them to visualize their earthquake data. They collect a massive amount of data from all over the world each day, but they lack a meaningful way of displaying it. In this challenge, you have been tasked with developing a way to visualize USGS data that will allow them to better educate the public and other government organizations (and hopefully secure more funding) on issues facing our planet.</p>
 
-Image of Map:
+<h2>Image of Map:</h2>
 
   ![image](https://github.com/CourtneyCole123/leaflet-challenge/assets/162069113/cda988ea-db4b-40a4-8880-0b6206967e9f)
 
